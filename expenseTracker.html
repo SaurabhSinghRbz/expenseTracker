@@ -1,0 +1,198 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Tracker</title>
+
+    <style>
+        body>h1 {
+            color: rgb(4, 71, 255);
+            text-align: center;
+        }
+
+        #container {
+            height: 40%;
+            width: 20%;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            margin: auto;
+            text-align: center;
+        }
+
+        #container>div {
+            padding: 2%;
+        }
+
+        p {
+            margin-bottom: 0px;
+            text-align: left;
+            margin-left: 5%;
+        }
+
+        #container>div>form>select {
+            width: 90%;
+            height: 10%;
+            margin-top: 0px;
+        }
+
+        #container>div>form>input {
+            width: 90%;
+            height: 10%;
+            margin-top: 0px;
+        }
+
+        button {
+            margin-top: 10%;
+            width: 90%;
+            height: 12%;
+            border-radius: 15px;
+            background-color: blue;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            cursor: pointer;
+            background-color: rgb(73, 73, 226);
+        }
+
+        #cards {
+            width: 80%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto;
+            gap: 30px;
+            margin: auto;
+            margin-top: 50px;
+        }
+
+        #cards>div {
+            /* background-color: red; */
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            height: auto;
+            width: 240px;
+            margin: auto;
+            /* text-align: center; */
+        }
+
+        #cards>div>:first-child {
+            color: blue;
+            font-size: 25px;
+            margin: 5%;
+            margin-bottom: 0px;
+        }
+
+        #cards>div>:nth-child(2) {
+            color: green;
+        }
+
+        #cards>div>:nth-child(3) {
+            color: red;
+        }
+
+        #cards>div>:last-child {
+            color: green;
+            font-weight: bold;
+            padding-bottom: 5%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1><u>EXPENSE TRACKER</u></h1>
+    <div id="container">
+        <div>
+            <form action="">
+                <p>Select Month</p>
+                <select id="monthsName"></select>
+
+                <p>Income</p>
+                <input type="number" id="icomeRs" placeholder="Enter income in Rs." />
+
+                <p>Expense</p>
+                <input type="number" id="expenseRs" placeholder="Enter expenses in Rs." />
+                <button>Submit</button>
+            </form>
+        </div>
+    </div>
+    <div id="cards"></div>
+</body>
+
+<script>
+    var monthsArr = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
+    let optionList = document.getElementById("monthsName").options;
+    monthsArr.forEach(function (month) {
+        optionList.add(new Option(month));
+    });
+
+    document.querySelector("form").addEventListener("submit", storeResult);
+
+
+    var details = [];
+    function storeResult() {
+        event.preventDefault();
+        var detail = {
+            monthName: document.getElementById("monthsName").value,
+            incomeRupees: document.getElementById("icomeRs").value,
+            expenseRupees: document.getElementById("expenseRs").value,
+            savingsRupees: document.getElementById("icomeRs").value - document.getElementById("expenseRs").value,
+        };
+        details.push(detail);
+        localStorage.setItem("tracker", JSON.stringify(details));
+        var display = JSON.parse(localStorage.getItem('tracker'))
+        displayResult(display);
+    }
+
+
+    function displayResult(display) {
+        document.querySelector("#cards").innerHTML = ""
+        display.forEach(function (ele) {
+
+            var mainDiv = document.getElementById("cards");
+            var box = document.createElement("div")
+
+            var nameOfMonth = document.createElement("h3")
+            nameOfMonth.innerHTML = ele.monthName
+
+            var incomeTag = document.createElement('p');
+            incomeTag.innerHTML = "Your Income is Rs " + ele.incomeRupees + "/-"
+
+            var ExpenseTag = document.createElement('p')
+            ExpenseTag.innerHTML = "Your expense is Rs " + ele.expenseRupees + "/-"
+
+            var savingTag = document.createElement('p');
+            savingTag.innerHTML = "Your savings are Rs " + ele.savingsRupees + "/-"
+
+
+            box.append(nameOfMonth, incomeTag, ExpenseTag, savingTag)
+            mainDiv.appendChild(box)
+        })
+    }
+
+
+
+
+    var display = JSON.parse(localStorage.getItem('tracker'))
+    if (display) {
+        details = display;
+        displayResult(display);
+    }
+
+
+</script>
+
+</html>
